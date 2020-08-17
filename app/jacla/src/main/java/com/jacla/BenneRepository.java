@@ -9,8 +9,8 @@ import org.springframework.data.repository.CrudRepository;
 
 
 @RepositoryRestResource(collectionResourceRel = "benne", path = "benne")
-public interface BenneRepository extends CrudRepository<Benne, Long> {
+public interface BenneRepository extends PagingAndSortingRepository<Benne, Long> {
 
-  List<Benne> findByBenneName(@Param("name") String name);
+  List<Benne> findByNomBenne(@Param("nomBenne") String nomBenne);
 
 }

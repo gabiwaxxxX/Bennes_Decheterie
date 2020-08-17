@@ -38,4 +38,8 @@ public class UI extends JFrame {
 
     }
 
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Api");
+    }
+
 }
