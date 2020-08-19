@@ -27,13 +27,14 @@ public class DumpsterController {
     DumpsterController(DumpsterRepository dumpsterRepo){
         this.dumpsterRepo=dumpsterRepo;
     }
+
     @GetMapping("/dumpster")
      public List<Dumpster> dumpsterList(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return dumpsterRepo.getDumpster();
+        return dumpsterRepo.getDumpsters();
     }
 
-    @PostMapping("/dumpster")
+    /*@PostMapping("/dumpster")
     public List<Dumpster> newDumpster(@RequestBody Dumpster newDumpster) {
         return dumpsterRepo.postDumpster(newDumpster);
-    }
+    }*/
 }

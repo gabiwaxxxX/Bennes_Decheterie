@@ -1,45 +1,43 @@
 package com.jacla.api;
 
 import com.jacla.api.models.Dumpster;
+import com.jacla.api.repositories.DumpsterRepository;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 public class UI extends JFrame {
+    private JPanel contentPanel;
     private JLabel titleLabel;
     private JTable connectionTable;
+    private DefaultTableModel model = new DefaultTableModel();
+    private DumpsterRepository dumpsterRepository = new DumpsterRepository();
 
     protected UI(){
-        titleLabel = new JLabel("Gestion des bennes");
-        //headers for the table
-        String[] columns = new String[] {
-                "Name", "Filling","Connection","Ip"
-        };
+        this.contentPanel = new JPanel();
+        this.titleLabel = new JLabel("Gestion des bennes");
+        this.titleLabel.setVerticalAlignment(SwingConstants.CENTER);
 
+        this.connectionTable = new JTable(model);
+        this.model.addColumn("Nom");
+        this.model.addColumn("Remplissage");
+        this.model.addColumn("Connexion");
+        this.model.addColumn("IP");
+        for (Dumpster d:dumpsterRepository.getDumpsters()){
+            addDumpster(d);
+        }
 
-        //actual data for the table in a 2d array
-        Object[][] data = new Object[][] {
-                {"Gabi", 45, true, "192.168.0.7" },
-                {"Gabi", 45, true, "192.168.0.7" },
-                {"Theo", 45, true, "192.168.0.7" },
-        };
+        this.contentPanel.add(titleLabel);
+        this.contentPanel.add(connectionTable);
+        setContentPane(contentPanel);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        connectionTable = new JTable(data, columns);
-        this.setSize(300, 200);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.pack();
-        this.setVisible(true);
-        this.add(connectionTable);
-        this.add(titleLabel);
     }
 
     public void addDumpster(Dumpster dumpster){
+        this.model.addRow(new Object[]{dumpster.getName(), dumpster.getFilling(), dumpster.getConnection(), dumpster.getIp() });
 
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Api");
-    }
-
 }

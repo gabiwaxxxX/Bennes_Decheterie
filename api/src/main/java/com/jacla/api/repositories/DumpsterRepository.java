@@ -3,29 +3,39 @@ package com.jacla.api.repositories;
 import java.util.*;     
 import com.jacla.api.models.Dumpster;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-
-
-import java.util.*;
 
 @Repository
 public class DumpsterRepository  {
 
     private List<Dumpster> list = new ArrayList<Dumpster>();
 
-    public List<Dumpster> getDumpster(){
+    public DumpsterRepository(){
+        list.add(new Dumpster("Theo", 35,true,"192.168.12"));
+        list.add(new Dumpster("Gab", 66,true,"192.168.13"));
+        list.add(new Dumpster("Gaetan", 13,true,"192.168.14"));
+        list.add(new Dumpster("Tutu", 85,true,"192.168.15"));
+        System.out.println(list);
+    }
 
+    public List<Dumpster> getDumpsters(){
         return list;
     }
 
-    public List<Dumpster> postDumpster(Dumpster newDumpster){
+    public Object[][] getObject(){
+        Object objectList[][] = new Object[list.size()][];
+        int i=0;
+        for(Dumpster d : list){
+            objectList[i] = new Object[]{d.getName(), d.getFilling(), d.getConnection(),d.getIp()};
+            i++;
+        }
+        return objectList;
+    }
+
+    /*public List<Dumpster> addDumpster(Dumpster newDumpster){
         int count = 0; 
         boolean flag = true;
         if (list.size() == 0){
             list.add(newDumpster);
-            
         }
         else{
             Dumpster change = newDumpster ;
@@ -38,15 +48,11 @@ public class DumpsterRepository  {
                     change = odumpster;
                 }
             }
-            if (count == 0){
-                newDumpster.setId(list.size());
-                list.add(newDumpster);
-                
-            }
+
             if(count ==1){
                 change.setFilling(newDumpster.getFilling());
             }
         }
         return list;
-    }
+    }*/
 }

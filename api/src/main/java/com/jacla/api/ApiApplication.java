@@ -2,6 +2,8 @@ package com.jacla.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import javax.swing.*;
 import java.lang.Thread;
 import java.lang.InterruptedException;
 import java.lang.ProcessBuilder;
@@ -16,16 +18,16 @@ import java.util.Random;
 @SpringBootApplication
 public class ApiApplication {
 
-    
-    
-
-    public static void main(String[] args) 
-        throws InterruptedException {
-        UI app = new UI();
+    public static void main(String[] args)
+        //throws InterruptedException
+        {
+        UI frame = new UI();
+        frame.pack();
+        frame.setSize(300, 200);
+        frame.setVisible(true);
         SpringApplication.run(ApiApplication.class, args);
-
         
-        try {
+        /*try {
         String url = "http://localhost:8080/dumpster";
         URL obj = new URL(url);
         for (int i = 0; i<6;i++){
@@ -63,7 +65,7 @@ public class ApiApplication {
         catch ( Exception e1) {
             e1.printStackTrace();
 			};
-        
+     */
             
     }
 
