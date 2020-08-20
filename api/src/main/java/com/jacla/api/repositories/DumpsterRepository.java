@@ -10,6 +10,7 @@ public class DumpsterRepository  {
     private List<Dumpster> list = new ArrayList<Dumpster>();
 
     public DumpsterRepository(){
+
         list.add(new Dumpster("Theo", 35,true,"192.168.12"));
         list.add(new Dumpster("Gab", 66,true,"192.168.13"));
         list.add(new Dumpster("Gaetan", 13,true,"192.168.14"));
