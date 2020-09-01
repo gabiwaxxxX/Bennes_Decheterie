@@ -22,13 +22,29 @@ public class DumpsterController {
     private DumpsterRepositoryImpl dumpsterRepository;
 
     @PostMapping
-    public void saveDumpster(@RequestBody Dumpster dumpster){
-        dumpsterRepository.save(dumpster);
+    public void postDumpster(@RequestBody Dumpster dumpster){
+        dumpsterRepository.post(dumpster);
+    }
+
+    @GetMapping("/{id}")
+    public Dumpster getDumpster(@PathVariable(value = "id") String id) {
+        return dumpsterRepository.get(id);
     }
 
     @GetMapping
-     public ResponseEntity<List<Dumpster>> dumpsterList() {
-        List<Dumpster> dumpsterList = dumpsterRepository.findAll();
+     public ResponseEntity<List<Dumpster>> getDumpsters() {
+        List<Dumpster> dumpsterList = dumpsterRepository.getAll();
         return new ResponseEntity<List<Dumpster>>(dumpsterList, HttpStatus.OK);
     }
+
+    @DeleteMapping("{id}")
+    public long deleteDumpster(@PathVariable(value="id") String id){
+        return dumpsterRepository.delete(id);
+    }
+
+    @PutMapping
+    public void updateDumpster(@RequestBody Dumpster dumpster){
+        dumpsterRepository.update(dumpster);
+    }
+
 }

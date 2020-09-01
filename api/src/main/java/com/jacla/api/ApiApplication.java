@@ -1,28 +1,27 @@
 package com.jacla.api;
 
+import com.jacla.api.util.SetConnection;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import javax.swing.*;
-import java.lang.Thread;
-import java.lang.InterruptedException;
-import java.lang.ProcessBuilder;
-import java.net.HttpURLConnection;
-import java.awt.Desktop; 
-import java.net.URL;
-import java.io.*;
-import java.net.URI;
-import java.util.Random;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
 
 @SpringBootApplication
 public class ApiApplication {
+    private static Interface frame;
 
     public static void main(String[] args) {
-        UI frame = new UI();
-        frame.pack();
-        frame.setSize(1280, 780);
-        frame.setVisible(true);
+        frame = new Interface();
+        SetConnection connector = new SetConnection();
+        connector.checkHosts();
+        connector.SendIPtoArduinoReachable();
+
         SpringApplication.run(ApiApplication.class, args);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void applicationReady(){
+        frame.start();
     }
 }

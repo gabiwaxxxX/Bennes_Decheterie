@@ -28,19 +28,30 @@ public class DumpsterRepositoryImpl implements DumpsterRepository {
     }
 
     @Override
-    public void save(Dumpster dumpster) {
-        hashOperations.put(TABLE_NAME,dumpster.getId(),dumpster);
+    public void post(Dumpster dumpster) {
+        Long id = hashOperations.size(TABLE_NAME);
+        hashOperations.put(TABLE_NAME,id.toString(),dumpster);
     }
 
     @Override
-    public Dumpster find(String id) {
+    public Dumpster get(String id) {
         return hashOperations.get(TABLE_NAME,id);
     }
 
     @Override
-    public List<Dumpster> findAll() {
+    public List<Dumpster> getAll() {
         List<Dumpster> dumpsterList = new ArrayList<Dumpster>();
         hashOperations.entries(TABLE_NAME).forEach((key, element)-> dumpsterList.add(element));
         return dumpsterList;
+    }
+
+    @Override
+    public long delete(String id) {
+        return hashOperations.delete(TABLE_NAME,id);
+    }
+
+    @Override
+    public void update(Dumpster dumpster) {
+        hashOperations.put(TABLE_NAME,dumpster.getId(), dumpster);
     }
 }

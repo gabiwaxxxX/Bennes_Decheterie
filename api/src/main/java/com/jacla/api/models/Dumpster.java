@@ -1,6 +1,8 @@
 package com.jacla.api.models;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
@@ -9,20 +11,24 @@ public class Dumpster implements Serializable {
     private static final long serialVersionUID = -1546689101108179607L;
     private String name;
     private int filling;
-    private boolean connection;
+    private boolean connected;
     private String ip;
     private String id;
-    private boolean emptyInitialisation;
-    private boolean fullInitialisation;
+    private boolean emptyInitialised;
+    private boolean fullInitialised;
+    private String macAddress;
 
-    public Dumpster(String id, String name, int filling, boolean connection, String ip, boolean emptyInitialisation, boolean fullInitialisation) {
+    public Dumpster(){ }
+
+    public Dumpster(String id, String name, int filling, boolean connected, String ip, boolean emptyInitialised, boolean fullInitialised, String macAddress) {
         this.id = id;
         this.filling = filling;
-        this.connection = connection;
+        this.connected = connected;
         this.ip = ip;
         this.name = name;
-        this.emptyInitialisation = emptyInitialisation;
-        this.fullInitialisation = fullInitialisation;
+        this.emptyInitialised = emptyInitialised;
+        this.fullInitialised = fullInitialised;
+        this.macAddress = macAddress;
     }
 
     public String getName() {
@@ -41,12 +47,12 @@ public class Dumpster implements Serializable {
         return id;
     }
 
-    public boolean isConnection() {
-        return connection;
+    public boolean isConnected() {
+        return connected;
     }
 
-    public void setConnection(boolean connection) {
-        this.connection = connection;
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 
     public void setFilling(int filling) {
@@ -70,24 +76,32 @@ public class Dumpster implements Serializable {
         return "Dumpster{" +
                 "name='" + name + '\'' +
                 ", filling=" + filling +
-                ", connection=" + connection +
+                ", connection=" + connected +
                 ", ip='" + ip + '\'' +
                 '}';
     }
 
-    public boolean isEmptyInitialisation() {
-        return emptyInitialisation;
+    public boolean isEmptyInitialised() {
+        return emptyInitialised;
     }
 
-    public void setEmptyInitialisation(boolean emptyInitialisation) {
-        this.emptyInitialisation = emptyInitialisation;
+    public void setEmptyInitialised(boolean emptyInitialised) {
+        this.emptyInitialised = emptyInitialised;
     }
 
-    public boolean isFullInitialisation() {
-        return fullInitialisation;
+    public boolean isFullInitialised() {
+        return fullInitialised;
     }
 
-    public void setFullInitialisation(boolean fullInitialisation) {
-        this.fullInitialisation = fullInitialisation;
+    public void setFullInitialised(boolean fullInitialised) {
+        this.fullInitialised = fullInitialised;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
     }
 }
