@@ -1,35 +1,55 @@
 package com.jacla.api;
 
 import com.jacla.api.models.Dumpster;
-import com.jacla.api.repositories.DumpsterRepository;
+import org.springframework.web.client.RestTemplate;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UI extends JFrame {
     private JPanel contentPanel;
     private JLabel titleLabel;
     private JTable connectionTable;
     private DefaultTableModel model = new DefaultTableModel();
-    private DumpsterRepository dumpsterRepository = new DumpsterRepository();
+    private JButton startBtn;
 
-    protected UI(){
-        this.contentPanel = new JPanel();
-        this.titleLabel = new JLabel("Gestion des bennes");
-        this.titleLabel.setVerticalAlignment(SwingConstants.CENTER);
+    protected UI() {
+        contentPanel = new JPanel();
+        contentPanel = new JPanel();
+        titleLabel = new JLabel("Gestion des bennes");
+        titleLabel.setVerticalAlignment(SwingConstants.CENTER);
 
-        this.connectionTable = new JTable(model);
-        this.model.addColumn("Nom");
-        this.model.addColumn("Remplissage");
-        this.model.addColumn("Connexion");
-        this.model.addColumn("IP");
-        for (Dumpster d:dumpsterRepository.getDumpsters()){
-            addDumpster(d);
-        }
+        startBtn = new JButton("Start");
 
-        this.contentPanel.add(titleLabel);
-        this.contentPanel.add(connectionTable);
+        connectionTable = new JTable(model);
+        model.addColumn("Nom");
+        model.addColumn("Remplissage");
+        model.addColumn("Connexion");
+        model.addColumn("IP");
+        model.addColumn("Initialisation à vide");
+        model.addColumn("Initialisation à plein");
+
+
+        startBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RestTemplate restTemplate = new RestTemplate();
+                String url = "http://localhost:8080/bennes";
+                Dumpster[] response = restTemplate.getForObject(url, Dumpster[].class);
+
+                for (Dumpster d:response) {
+                    addDumpster(d);
+                }
+                startBtn.setVisible(false);
+                contentPanel.add(connectionTable);
+                contentPanel.updateUI();
+            }
+        });
+
+        contentPanel.add(titleLabel);
+        contentPanel.add(startBtn);
         setContentPane(contentPanel);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -37,7 +57,6 @@ public class UI extends JFrame {
     }
 
     public void addDumpster(Dumpster dumpster){
-        this.model.addRow(new Object[]{dumpster.getName(), dumpster.getFilling(), dumpster.getConnection(), dumpster.getIp() });
-
+        this.model.addRow(new Object[]{dumpster.getName(), dumpster.getFilling(), dumpster.isConnection(), dumpster.getIp(), dumpster.isEmptyInitialisation(), dumpster.isFullInitialisation() });
     }
 }

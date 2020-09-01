@@ -1,40 +1,34 @@
 package com.jacla.api.controllers;
 
 import com.jacla.api.models.Dumpster;
-import com.jacla.api.repositories.DumpsterRepository;
+import com.jacla.api.repositories.DumpsterRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.hateoas.*;
-
+import javax.swing.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
+@RequestMapping("/bennes")
 public class DumpsterController {
 
     @Autowired
-    private final DumpsterRepository dumpsterRepo;
-    DumpsterController(DumpsterRepository dumpsterRepo){
-        this.dumpsterRepo=dumpsterRepo;
+    private DumpsterRepositoryImpl dumpsterRepository;
+
+    @PostMapping
+    public void saveDumpster(@RequestBody Dumpster dumpster){
+        dumpsterRepository.save(dumpster);
     }
 
-    @GetMapping("/dumpster")
-     public List<Dumpster> dumpsterList(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return dumpsterRepo.getDumpsters();
+    @GetMapping
+     public ResponseEntity<List<Dumpster>> dumpsterList() {
+        List<Dumpster> dumpsterList = dumpsterRepository.findAll();
+        return new ResponseEntity<List<Dumpster>>(dumpsterList, HttpStatus.OK);
     }
-
-    /*@PostMapping("/dumpster")
-    public List<Dumpster> newDumpster(@RequestBody Dumpster newDumpster) {
-        return dumpsterRepo.postDumpster(newDumpster);
-    }*/
 }

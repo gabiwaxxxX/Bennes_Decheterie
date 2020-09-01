@@ -1,48 +1,69 @@
 package com.jacla.api.models;
 
-import com.jacla.api.repositories.DumpsterRepository;
-
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
-public class Dumpster {
+public class Dumpster implements Serializable {
 
-   // private @Id @GeneratedValue long id;
+    private static final long serialVersionUID = -1546689101108179607L;
     private String name;
     private int filling;
     private boolean connection;
     private String ip;
+    private String id;
+    private boolean emptyInitialisation;
+    private boolean fullInitialisation;
 
-    public Dumpster(String iName, int iFilling, boolean iConnection, String iIp) {
-
-        this.filling = iFilling;
-        this.connection = iConnection;
-        this.ip = iIp;
-        if(iName != "") this.name = iName;
-        else {
-            DumpsterRepository dr = new DumpsterRepository();
-            this.name="Benne \u2116 "+ dr.getDumpsters().size();
-        }
+    public Dumpster(String id, String name, int filling, boolean connection, String ip, boolean emptyInitialisation, boolean fullInitialisation) {
+        this.id = id;
+        this.filling = filling;
+        this.connection = connection;
+        this.ip = ip;
+        this.name = name;
+        this.emptyInitialisation = emptyInitialisation;
+        this.fullInitialisation = fullInitialisation;
     }
 
-    public int getFilling() { return this.filling; }
+    public String getName() {
+        return name;
+    }
 
-    public String getName() { return this.name; }
+    public int getFilling() {
+        return filling;
+    }
 
-    public boolean getConnection() { return this.connection; }
+    public String getIp() {
+        return ip;
+    }
 
-    public String getIp(){ return this.ip; }
+    public String getId() {
+        return id;
+    }
 
-    public void setName(String name){ this.name = name; }
+    public boolean isConnection() {
+        return connection;
+    }
 
-    public void setIp(String ip) { this.ip = ip; }
+    public void setConnection(boolean connection) {
+        this.connection = connection;
+    }
 
-    public void setConnection(boolean connection) { this.connection = connection; }
+    public void setFilling(int filling) {
+        this.filling = filling;
+    }
 
-    public void setFilling(int filling) { this.filling = filling; }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {
@@ -54,6 +75,19 @@ public class Dumpster {
                 '}';
     }
 
-    
+    public boolean isEmptyInitialisation() {
+        return emptyInitialisation;
+    }
 
+    public void setEmptyInitialisation(boolean emptyInitialisation) {
+        this.emptyInitialisation = emptyInitialisation;
+    }
+
+    public boolean isFullInitialisation() {
+        return fullInitialisation;
+    }
+
+    public void setFullInitialisation(boolean fullInitialisation) {
+        this.fullInitialisation = fullInitialisation;
+    }
 }
