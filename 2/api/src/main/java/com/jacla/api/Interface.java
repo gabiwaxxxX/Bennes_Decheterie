@@ -1,6 +1,10 @@
 package com.jacla.api;
 
 import com.jacla.api.models.Dumpster;
+import com.jacla.api.util.SetConnection;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -8,6 +12,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,16 +35,16 @@ public class Interface extends JFrame {
     private JButton fullInitBtn;
     private JButton bracingBtn;
     private JButton deleteBtn;
+    private JButton changeNameBtn;
+    private JButton refreshBtn;
     private final static String url = "http://localhost:8080/bennes";
     private RestTemplate restTemplate = new RestTemplate();
     private Dumpster[] dumpsters;
+    private SetConnection connector = new SetConnection();
 
 
     protected Interface() {
-        setGUI();
-    }
-
-    private void setGUI(){
+        connector.findArduinos();
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
         buttonPane = new JPanel();
@@ -59,6 +67,9 @@ public class Interface extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 deleteBtn.setEnabled(isDeleteAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
+                emptyInitBtn.setEnabled(isDeleteAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
+                fullInitBtn.setEnabled(isDeleteAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
+                changeNameBtn.setEnabled(true);
             }
         });
 
@@ -68,6 +79,8 @@ public class Interface extends JFrame {
         buttonPane.add(fullInitBtn);
         buttonPane.add(bracingBtn);
         buttonPane.add(deleteBtn);
+        buttonPane.add(changeNameBtn);
+        buttonPane.add(refreshBtn);
         contentPane.add(titleLabel, BorderLayout.PAGE_START);
         contentPane.add(startBtn, BorderLayout.CENTER);
 
@@ -79,11 +92,30 @@ public class Interface extends JFrame {
         setVisible(true);
     }
 
-
     private void setButtons(){
         emptyInitBtn = new JButton("Initialiser à vide");
+        emptyInitBtn.setEnabled(false);
+        emptyInitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setInitialisation("0");
+            }
+        });
         fullInitBtn = new JButton("Initialiser à plein");
+        fullInitBtn.setEnabled(false);
+        fullInitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setInitialisation("1");
+            }
+        });
         bracingBtn = new JButton("Apparaillage");
+        bracingBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                connector.findArduinos();
+            }
+        });
         deleteBtn = new JButton("Supprimer");
         deleteBtn.setEnabled(false);
         deleteBtn.addActionListener(new ActionListener() {
@@ -99,6 +131,22 @@ public class Interface extends JFrame {
                 contentPane.remove(startBtn);
                 contentPane.add(new JScrollPane(connectionTable), BorderLayout.CENTER);
             }
+        });
+        changeNameBtn = new JButton("Changer le nom");
+        changeNameBtn.setEnabled(false);
+        changeNameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = JOptionPane.showInputDialog("Changer le nom");
+                dumpsters[connectionTable.getSelectedRow()].setName(name);
+                updateDumpster(dumpsters[connectionTable.getSelectedRow()]);
+                refreshTable();
+            }
+        });
+        refreshBtn = new JButton("Rafraichir");
+        refreshBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { refreshTable(); }
         });
     }
 
@@ -120,6 +168,22 @@ public class Interface extends JFrame {
         }
         return false;
     }
+    private boolean isEmptyInitAble(String id){
+        for (Dumpster d: dumpsters){
+            if (d.getId() == id){
+                return !d.isEmptyInitialised();
+            }
+        }
+        return false;
+    }
+    private boolean isFullyInitAble(String id){
+        for (Dumpster d: dumpsters){
+            if (d.getId() == id){
+                return !d.isFullInitialised();
+            }
+        }
+        return false;
+    }
 
     private void addDumpster(Dumpster dumpster){
         this.model.addRow(new Object[]{dumpster.getId() ,dumpster.getName(), dumpster.getFilling(), dumpster.isConnected(), dumpster.getIp(), dumpster.isEmptyInitialised(), dumpster.isFullInitialised() });
@@ -133,10 +197,35 @@ public class Interface extends JFrame {
         deleteBtn.setEnabled(false);
     }
 
+    private void updateDumpster(Dumpster dumpster){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Dumpster> requestBody = new HttpEntity<>(dumpster, headers);
+        restTemplate.put(url, requestBody, new Object[] {});
+    }
+
     public void start(){
         startBtn.setEnabled(true);
         buttonPane.setVisible(true);
         contentPane.add(buttonPane, BorderLayout.PAGE_END);
+    }
+
+    private void setInitialisation(String msg){
+        try {
+            Socket socket = new Socket(dumpsters[connectionTable.getSelectedRow()].getIp(), 6666);
+            DataInputStream din=new DataInputStream(socket.getInputStream());
+            DataOutputStream dout=new DataOutputStream(socket.getOutputStream());
+            dout.writeUTF(msg);
+            dout.flush();
+            String inString = din.readUTF();
+            refreshTable();
+            din.close();
+            dout.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

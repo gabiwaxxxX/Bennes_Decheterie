@@ -29,8 +29,7 @@ public class DumpsterRepositoryImpl implements DumpsterRepository {
 
     @Override
     public void post(Dumpster dumpster) {
-        Long id = hashOperations.size(TABLE_NAME);
-        hashOperations.put(TABLE_NAME,id.toString(),dumpster);
+        hashOperations.put(TABLE_NAME, dumpster.getId(),dumpster);
     }
 
     @Override

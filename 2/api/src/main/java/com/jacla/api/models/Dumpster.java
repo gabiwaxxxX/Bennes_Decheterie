@@ -1,10 +1,14 @@
 package com.jacla.api.models;
 
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+@RedisHash
 @Entity
 public class Dumpster implements Serializable {
 
@@ -12,15 +16,15 @@ public class Dumpster implements Serializable {
     private String name;
     private int filling;
     private boolean connected;
+    @Id
     private String ip;
     private String id;
     private boolean emptyInitialised;
     private boolean fullInitialised;
-    private String macAddress;
 
     public Dumpster(){ }
 
-    public Dumpster(String id, String name, int filling, boolean connected, String ip, boolean emptyInitialised, boolean fullInitialised, String macAddress) {
+    public Dumpster(String id, String name, int filling, boolean connected, String ip, boolean emptyInitialised, boolean fullInitialised) {
         this.id = id;
         this.filling = filling;
         this.connected = connected;
@@ -28,7 +32,6 @@ public class Dumpster implements Serializable {
         this.name = name;
         this.emptyInitialised = emptyInitialised;
         this.fullInitialised = fullInitialised;
-        this.macAddress = macAddress;
     }
 
     public String getName() {
@@ -71,16 +74,6 @@ public class Dumpster implements Serializable {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Dumpster{" +
-                "name='" + name + '\'' +
-                ", filling=" + filling +
-                ", connection=" + connected +
-                ", ip='" + ip + '\'' +
-                '}';
-    }
-
     public boolean isEmptyInitialised() {
         return emptyInitialised;
     }
@@ -97,11 +90,16 @@ public class Dumpster implements Serializable {
         this.fullInitialised = fullInitialised;
     }
 
-    public String getMacAddress() {
-        return macAddress;
-    }
-
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
+    @Override
+    public String toString() {
+        return "Dumpster{" +
+                "name='" + name + '\'' +
+                ", filling=" + filling +
+                ", connected=" + connected +
+                ", ip='" + ip + '\'' +
+                ", id='" + id + '\'' +
+                ", emptyInitialised=" + emptyInitialised +
+                ", fullInitialised=" + fullInitialised +
+                '}';
     }
 }

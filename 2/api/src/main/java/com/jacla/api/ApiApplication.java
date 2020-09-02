@@ -13,10 +13,6 @@ public class ApiApplication {
 
     public static void main(String[] args) {
         frame = new Interface();
-        SetConnection connector = new SetConnection();
-        connector.checkHosts();
-        connector.SendIPtoArduinoReachable();
-
         SpringApplication.run(ApiApplication.class, args);
         frame.start();
     }

@@ -31,23 +31,10 @@ public class SetConnection {
         }
     }
 
-    public void checkHosts() {
+
+    public void findArduinos(){
         getInterfaces();
-        try{
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         for (String element : reachable) {
-            System.out.println(element);
-        }
-
-    }
-
-    public void SendIPtoArduinoReachable(){
-        for (String element : reachable) {
-            System.out.println("Attend de reponse de "+element);
             try{
                 Socket socket = new Socket(element, 6666);
                 DataInputStream in=new DataInputStream(socket.getInputStream());
@@ -55,39 +42,16 @@ public class SetConnection {
                 out.writeUTF(myIp);
                 out.flush();
                 String line = in.readUTF();
-                Dumpster d = new Dumpster();
-                d.setMacAddress(line.split("-")[0]);
-                d.setEmptyInitialised(Boolean.parseBoolean(line.split("-")[1]));
-                d.setFullInitialised(Boolean.parseBoolean(line.split("-")[2]));
-                System.out.println("echo: " + d);
                 in.close();
                 out.close();
                 socket.close();
-
             }
             catch(java.io.IOException e){
-                System.out.println("createDirectory failed:" + e);
             }
         }
 
     }
 
-    public void beginDialogs(){
-        try {
-            while (true){
-                ServerSocket server = new ServerSocket(8090);
-                BufferedReader in = new BufferedReader(new InputStreamReader(server.accept().getInputStream()));
-                server.close();
-                String line;
-                while((line = in.readLine()) != null)
-                {
-                    System.out.println("echo: " + line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void getInterfaces(){
         for(int i=1;i<=254;++i){
@@ -112,6 +76,11 @@ public class SetConnection {
                     }
                 }
             }).start();
+        }
+        try{
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
