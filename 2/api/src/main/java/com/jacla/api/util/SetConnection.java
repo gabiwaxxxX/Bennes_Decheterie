@@ -38,12 +38,9 @@ public class SetConnection {
         for (String element : reachable) {
             try{
                 Socket socket = new Socket(element, 6666);
-                DataInputStream in=new DataInputStream(socket.getInputStream());
                 DataOutputStream out=new DataOutputStream(socket.getOutputStream());
                 out.writeUTF(myIp);
                 out.flush();
-                String line = in.readUTF();
-                in.close();
                 out.close();
                 socket.close();
             }

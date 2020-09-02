@@ -37,7 +37,7 @@ public class DumpsterController {
         return new ResponseEntity<List<Dumpster>>(dumpsterList, HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public long deleteDumpster(@PathVariable(value="id") String id){
         return dumpsterRepository.delete(id);
     }
