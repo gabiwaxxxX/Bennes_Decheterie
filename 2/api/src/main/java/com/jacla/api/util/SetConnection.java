@@ -34,6 +34,7 @@ public class SetConnection {
 
     public void findArduinos(){
         getInterfaces();
+        System.out.println(reachable);
         for (String element : reachable) {
             try{
                 Socket socket = new Socket(element, 6666);

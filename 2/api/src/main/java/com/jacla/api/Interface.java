@@ -114,6 +114,7 @@ public class Interface extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 connector.findArduinos();
+                refreshTable();
             }
         });
         deleteBtn = new JButton("Supprimer");
