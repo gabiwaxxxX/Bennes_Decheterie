@@ -67,8 +67,8 @@ public class Interface extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 deleteBtn.setEnabled(isDeleteAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
-                emptyInitBtn.setEnabled(isDeleteAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
-                fullInitBtn.setEnabled(isDeleteAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
+                emptyInitBtn.setEnabled(isEmptyInitAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
+                fullInitBtn.setEnabled(isFullyInitAble((String)connectionTable.getValueAt(connectionTable.getSelectedRow(), 0)));
                 changeNameBtn.setEnabled(true);
             }
         });

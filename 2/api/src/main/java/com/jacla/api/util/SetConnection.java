@@ -21,7 +21,6 @@ public class SetConnection {
                 System.out.println("This PC is not connected to any network!");
             }
             else{
-
                 subNetwork = myIp.split("\\.")[0]+"."+myIp.split("\\.")[1]+"."+myIp.split("\\.")[2];
             }
             socket.close();
@@ -47,11 +46,11 @@ public class SetConnection {
             catch(java.io.IOException e){
             }
         }
-
     }
 
 
     private void getInterfaces(){
+        reachable.clear();
         for(int i=1;i<=254;++i){
             final int j=i;
             // New thread for parallel execution
@@ -61,7 +60,7 @@ public class SetConnection {
                         String host=subNetwork + "." + j;
                         // Create an InetAddress object with new IP
                         InetAddress addr=InetAddress.getByName(host);
-                        if (addr.isReachable(1000)){ // See if it is reachable or simply available(check time is 1s=1000ms)
+                        if (addr.isReachable(2000)){ // See if it is reachable or simply available(check time is 1s=1000ms)
                             if (!reachable.contains(host)){
                                 reachable.add(host);
                             }
